@@ -37,7 +37,7 @@ Column
     {
         id: extruderSelectionRow
         width: parent.width
-        height: Math.round(UM.Theme.getSize("sidebar_tabs").height * 2 / 3)
+        height: extrudersList.height
         visible: machineExtruderCount.properties.value > 1
 
         anchors
@@ -54,7 +54,7 @@ Column
             id: extrudersList
             property var index: 0
 
-            height: UM.Theme.getSize("sidebar_header_mode_tabs").height
+            height: Math.round(UM.Theme.getSize("setting_control").height)
             width: Math.round(parent.width)
             boundsBehavior: Flickable.StopAtBounds
 
@@ -133,7 +133,7 @@ Column
                                        control.hovered ? UM.Theme.getColor("action_button_hovered_text") :
                                        UM.Theme.getColor("action_button_text")
 
-                                font: UM.Theme.getFont("large_nonbold")
+                                font: UM.Theme.getFont("default")
                                 text: catalog.i18nc("@label", "Extruder")
                                 visible: width < (control.width - extruderIconItem.width - UM.Theme.getSize("default_margin").width)
                                 elide: Text.ElideRight
@@ -158,17 +158,6 @@ Column
                                 width: sizeToUse
                                 height: sizeToUse
 
-                                UM.RecolorImage {
-                                    id: mainCircle
-                                    anchors.fill: parent
-
-                                    sourceSize.width: parent.width
-                                    sourceSize.height: parent.width
-                                    source: UM.Theme.getIcon("extruder_button")
-
-                                    color: extruderNumberText.color
-                                }
-
                                 Label
                                 {
                                     id: extruderNumberText
@@ -178,6 +167,7 @@ Column
                                            control.hovered ? UM.Theme.getColor("action_button_hovered_text") :
                                            UM.Theme.getColor("action_button_text")
                                     font: UM.Theme.getFont("default_bold")
+                                    renderType: Text.NativeRendering
                                 }
 
                                 // Material colour circle
@@ -189,19 +179,18 @@ Column
                                     anchors
                                     {
                                         right: parent.right
-                                        top: parent.top
-                                        rightMargin: Math.round(parent.sizeToUse * 0.01)
-                                        topMargin: Math.round(parent.sizeToUse * 0.05)
+                                        verticalCenter: parent.verticalCenter
+                                        rightMargin: - parent.sizeToUse
                                     }
 
                                     color: model.color
 
-                                    width: Math.round(parent.width * 0.35)
-                                    height: Math.round(parent.height * 0.35)
-                                    radius: Math.round(width / 2)
+                                    border.width: UM.Theme.getSize("default_lining").width
+                                    border.color: UM.Theme.getColor("setting_control_border")
 
-                                    border.width: 1
-                                    border.color: UM.Theme.getColor("extruder_button_material_border")
+                                    height: Math.round(UM.Theme.getSize("setting_control").height / 2)
+                                    width: height
+                                    radius: Math.round(width / 2)
 
                                     opacity: !control.checked ? 0.6 : 1.0
                                 }
