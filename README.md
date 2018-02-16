@@ -6,3 +6,4 @@ This plugin replaces the sidebar with a more compact variation of the original s
 * "Check compatibility" link is removed
 * Extruder selection buttons are downsized
 * Custom/recommended buttons are moved to a combobox at the top
+* Margins are tweaked

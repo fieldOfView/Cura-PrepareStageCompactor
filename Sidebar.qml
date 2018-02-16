@@ -136,7 +136,7 @@ Rectangle
         height: visible ? UM.Theme.getSize("sidebar_lining").height : 0
         color: UM.Theme.getColor("sidebar_lining")
         anchors.top: header.bottom
-        anchors.topMargin: visible ? UM.Theme.getSize("sidebar_margin").height : 0
+        anchors.topMargin: visible ? UM.Theme.getSize("default_margin").height : 0
     }
 
     StackView
@@ -145,7 +145,7 @@ Rectangle
 
         anchors.bottom: footerSeparator.top
         anchors.top: headerSeparator.bottom
-        anchors.topMargin: UM.Theme.getSize("sidebar_margin").height
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: base.left
         anchors.right: base.right
         visible: !hideSettings

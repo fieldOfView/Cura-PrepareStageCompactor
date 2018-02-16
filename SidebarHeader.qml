@@ -15,7 +15,7 @@ Column
     property int currentExtruderIndex: Cura.ExtruderManager.activeExtruderIndex;
     property bool currentExtruderVisible: extrudersList.visible;
 
-    spacing: Math.round(UM.Theme.getSize("sidebar_margin").width * 0.9)
+    spacing: Math.round(UM.Theme.getSize("default_margin").height)
 
     signal showTooltip(Item item, point location, string text)
     signal hideTooltip()
@@ -46,7 +46,7 @@ Column
             leftMargin: Math.round(UM.Theme.getSize("sidebar_margin").width * 0.7)
             right: parent.right
             rightMargin: Math.round(UM.Theme.getSize("sidebar_margin").width * 0.7)
-            topMargin: UM.Theme.getSize("sidebar_margin").height
+            topMargin: UM.Theme.getSize("default_margin").height
         }
 
         ListView
@@ -206,7 +206,7 @@ Column
     Item
     {
         id: extruderRowSpacer
-        height: Math.round(UM.Theme.getSize("sidebar_margin").height / 4)
+        height: Math.round(UM.Theme.getSize("default_margin").height / 4)
         width: height
         visible: !extruderSelectionRow.visible
     }
