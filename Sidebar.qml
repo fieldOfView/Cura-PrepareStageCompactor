@@ -422,7 +422,7 @@ Rectangle
         onHideTooltip: base.hideTooltip()
     }
 
-    Cura.SidebarAdvanced
+    SettingView
     {
         id: sidebarAdvanced
         visible: false
