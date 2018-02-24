@@ -109,7 +109,6 @@ Rectangle
         anchors {
             top: base.top
             right: parent.right
-            rightMargin: rightMargin
         }
 
         model: modesListModel
@@ -132,7 +131,7 @@ Rectangle
     Rectangle {
         id: headerSeparator
         width: parent.width
-        visible: settingsModeSelection.visible && header.visible
+        visible: header.visible
         height: visible ? UM.Theme.getSize("sidebar_lining").height : 0
         color: UM.Theme.getColor("sidebar_lining")
         anchors.top: header.bottom
