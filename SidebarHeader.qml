@@ -1,7 +1,7 @@
 // Copyright (c) 2017 Ultimaker B.V.
 // Cura is released under the terms of the LGPLv3 or higher.
 
-import QtQuick 2.8
+import QtQuick 2.7
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
@@ -14,6 +14,10 @@ Column
 
     property int currentExtruderIndex: Cura.ExtruderManager.activeExtruderIndex;
     property bool currentExtruderVisible: extrudersList.visible;
+    property bool printerConnected: Cura.MachineManager.printerConnected
+    property bool hasManyPrinterTypes: printerConnected ? Cura.MachineManager.printerOutputDevices[0].connectedPrintersTypeCount.length > 1 : false
+    property bool buildplateCompatibilityError: !Cura.MachineManager.variantBuildplateCompatible && !Cura.MachineManager.variantBuildplateUsable
+    property bool buildplateCompatibilityWarning: Cura.MachineManager.variantBuildplateUsable
 
     spacing: Math.round(UM.Theme.getSize("default_margin").height)
 
@@ -22,12 +26,13 @@ Column
 
     Item
     {
+        id: initialSeparator
         anchors
         {
             left: parent.left
             right: parent.right
         }
-        visible: extruderSelectionRow.visible
+        visible: buildplateRow.visible || extruderSelectionRow.visible
         height: UM.Theme.getSize("default_lining").height
         width: height
     }
@@ -89,26 +94,92 @@ Column
                 exclusiveGroup: extruderMenuGroup
                 checked: base.currentExtruderIndex == index
 
-                onClicked:
+                property bool extruder_enabled: true
+
+                MouseArea
                 {
-                    forceActiveFocus() // Changing focus applies the currently-being-typed values so it can change the displayed setting values.
-                    Cura.ExtruderManager.setActiveExtruderIndex(index);
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: {
+                        switch (mouse.button) {
+                            case Qt.LeftButton:
+                                forceActiveFocus(); // Changing focus applies the currently-being-typed values so it can change the displayed setting values.
+                                Cura.ExtruderManager.setActiveExtruderIndex(index);
+                                break;
+                            case Qt.RightButton:
+                                extruder_enabled = Cura.MachineManager.getExtruder(model.index).isEnabled
+                                extruderMenu.popup();
+                                break;
+                        }
+
+                    }
+                }
+
+                Menu
+                {
+                    id: extruderMenu
+
+                    MenuItem {
+                        text: catalog.i18nc("@action:inmenu", "Enable Extruder")
+                        onTriggered: Cura.MachineManager.setExtruderEnabled(model.index, true)
+                        visible: !extruder_enabled  // using an intermediate variable prevents an empty popup that occured now and then
+                    }
+
+                    MenuItem {
+                        text: catalog.i18nc("@action:inmenu", "Disable Extruder")
+                        onTriggered: Cura.MachineManager.setExtruderEnabled(model.index, false)
+                        visible: extruder_enabled
+                        enabled: Cura.MachineManager.numberExtrudersEnabled > 1
+                    }
                 }
 
                 style: ButtonStyle
                 {
                     background: Item
                     {
+                        function buttonBackgroundColor(index)
+                        {
+                            var extruder = Cura.MachineManager.getExtruder(index)
+                            if (extruder.isEnabled) {
+                                return (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active") :
+                                        control.hovered ? UM.Theme.getColor("action_button_hovered") :
+                                        UM.Theme.getColor("action_button")
+                            } else {
+                                return UM.Theme.getColor("action_button_disabled")
+                            }
+                        }
+
+                        function buttonBorderColor(index)
+                        {
+                            var extruder = Cura.MachineManager.getExtruder(index)
+                            if (extruder.isEnabled) {
+                                return (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active_border") :
+                                        control.hovered ? UM.Theme.getColor("action_button_hovered_border") :
+                                        UM.Theme.getColor("action_button_border")
+                            } else {
+                                return UM.Theme.getColor("action_button_disabled_border")
+                            }
+                        }
+
+                        function buttonColor(index) {
+                            var extruder = Cura.MachineManager.getExtruder(index);
+                            if (extruder.isEnabled)
+                            {
+                                return (
+                                    control.checked || control.pressed) ? UM.Theme.getColor("action_button_active_text") :
+                                    control.hovered ? UM.Theme.getColor("action_button_hovered_text") :
+                                    UM.Theme.getColor("action_button_text");
+                            } else {
+                                return UM.Theme.getColor("action_button_disabled_text");
+                            }
+                        }
+
                         Rectangle
                         {
                             anchors.fill: parent
                             border.width: control.checked ? UM.Theme.getSize("default_lining").width * 2 : UM.Theme.getSize("default_lining").width
-                            border.color: (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active_border") :
-                                          control.hovered ? UM.Theme.getColor("action_button_hovered_border") :
-                                          UM.Theme.getColor("action_button_border")
-                            color: (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active") :
-                                   control.hovered ? UM.Theme.getColor("action_button_hovered") :
-                                   UM.Theme.getColor("action_button")
+                            border.color: buttonBorderColor(index)
+                            color: buttonBackgroundColor(index)
                             Behavior on color { ColorAnimation { duration: 50; } }
                         }
 
@@ -116,6 +187,7 @@ Column
                         {
                             id: extruderButtonFace
                             anchors.centerIn: parent
+
                             width: {
                                 var extruderTextWidth = extruderStaticText.visible ? extruderStaticText.width : 0;
                                 var iconWidth = extruderIconItem.width;
@@ -129,12 +201,11 @@ Column
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
 
-                                color: (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active_text") :
-                                       control.hovered ? UM.Theme.getColor("action_button_hovered_text") :
-                                       UM.Theme.getColor("action_button_text")
+                                color: buttonColor(index)
 
                                 font: UM.Theme.getFont("default")
                                 text: catalog.i18nc("@label", "Extruder")
+                                renderType: Text.NativeRendering
                                 visible: width < (control.width - extruderIconItem.width - UM.Theme.getSize("default_margin").width)
                                 elide: Text.ElideRight
                             }
@@ -163,9 +234,7 @@ Column
                                     id: extruderNumberText
                                     anchors.centerIn: parent
                                     text: index + 1;
-                                    color: (control.checked || control.pressed) ? UM.Theme.getColor("action_button_active_text") :
-                                           control.hovered ? UM.Theme.getColor("action_button_hovered_text") :
-                                           UM.Theme.getColor("action_button_text")
+                                    color: buttonColor(index)
                                     font: UM.Theme.getFont("default_bold")
                                     renderType: Text.NativeRendering
                                 }
@@ -232,6 +301,7 @@ Column
             anchors.verticalCenter: materialVariantContainer.verticalCenter
             width: Math.round(parent.width * 0.3)
             font: UM.Theme.getFont("default")
+            renderType: Text.NativeRendering
             color: UM.Theme.getColor("text")
             text:
             {
@@ -255,6 +325,10 @@ Column
         Item
         {
             id: materialVariantContainer
+
+            property var activeExtruder: Cura.MachineManager.activeStack
+            property var hasActiveExtruder: activeExtruder != null
+            property var currentRootMaterialName: hasActiveExtruder ? activeExtruder.material.name : ""
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
@@ -281,8 +355,8 @@ Column
             {
                 id: materialSelection
 
-                text: Cura.MachineManager.activeMaterialName
-                tooltip: Cura.MachineManager.activeMaterialName
+                text: parent.currentRootMaterialName
+                tooltip: parent.currentRootMaterialName
                 visible: Cura.MachineManager.hasMaterials
 
                 enabled: !extrudersList.visible || base.currentExtruderIndex  > -1
