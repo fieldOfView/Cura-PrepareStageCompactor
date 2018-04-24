@@ -141,22 +141,12 @@ Rectangle
         onHideTooltip: base.hideTooltip()
     }
 
-    Rectangle {
-        id: headerSeparator
-        width: parent.width
-        visible: header.visible
-        height: visible ? UM.Theme.getSize("sidebar_lining").height : 0
-        color: UM.Theme.getColor("sidebar_lining")
-        anchors.top: header.bottom
-        anchors.topMargin: visible ? UM.Theme.getSize("default_margin").height : 0
-    }
-
     StackView
     {
         id: sidebarContents
 
         anchors.bottom: footerSeparator.top
-        anchors.top: headerSeparator.bottom
+        anchors.top: header.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").height
         anchors.left: base.left
         anchors.right: base.right

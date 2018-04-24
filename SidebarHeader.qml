@@ -34,7 +34,6 @@ Column
         }
         visible: buildplateRow.visible || extruderSelectionRow.visible
         height: UM.Theme.getSize("default_lining").height
-        width: height
     }
 
     // Extruder Row
@@ -272,14 +271,6 @@ Column
         }
     }
 
-    Item
-    {
-        id: extruderRowSpacer
-        height: Math.round(UM.Theme.getSize("default_margin").height / 4)
-        width: height
-        visible: !extruderSelectionRow.visible
-    }
-
     //Variant & material row
     Item
     {
@@ -333,7 +324,7 @@ Column
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
 
-            width: Math.floor(parent.width * 0.55 + UM.Theme.getSize("sidebar_margin").width)
+            width: Math.round(parent.width * 0.55 + UM.Theme.getSize("sidebar_margin").width)
             height: UM.Theme.getSize("setting_control").height
 
             ToolButton {
@@ -343,7 +334,7 @@ Column
                 visible: Cura.MachineManager.hasVariants
 
                 height: UM.Theme.getSize("setting_control").height
-                width: materialSelection.visible ? Math.floor((parent.width - UM.Theme.getSize("default_margin").width) / 2) : parent.width
+                width: materialSelection.visible ? Math.round((parent.width - UM.Theme.getSize("default_margin").width) / 2) : parent.width
                 anchors.left: parent.left
                 style: UM.Theme.styles.sidebar_header_button
                 activeFocusOnPress: true
@@ -362,7 +353,7 @@ Column
                 enabled: !extrudersList.visible || base.currentExtruderIndex  > -1
 
                 height: UM.Theme.getSize("setting_control").height
-                width: variantSelection.visible ? Math.floor((parent.width - UM.Theme.getSize("default_margin").width) / 2) : parent.width
+                width: variantSelection.visible ? Math.round((parent.width - UM.Theme.getSize("default_margin").width) / 2) : parent.width
                 anchors.right: parent.right
                 style: UM.Theme.styles.sidebar_header_button
                 activeFocusOnPress: true
