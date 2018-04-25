@@ -24,18 +24,6 @@ Column
     signal showTooltip(Item item, point location, string text)
     signal hideTooltip()
 
-    Item
-    {
-        id: initialSeparator
-        anchors
-        {
-            left: parent.left
-            right: parent.right
-        }
-        visible: buildplateRow.visible || extruderSelectionRow.visible
-        height: UM.Theme.getSize("default_lining").height
-    }
-
     // Extruder Row
     Item
     {

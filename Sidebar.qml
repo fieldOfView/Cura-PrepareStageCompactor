@@ -136,6 +136,7 @@ Rectangle
         width: parent.width
         visible: !hideSettings && (machineExtruderCount.properties.value > 1 || Cura.MachineManager.hasMaterials || Cura.MachineManager.hasVariants)
         anchors.top: machineSelection.bottom
+        anchors.topMargin: UM.Theme.getSize("default_margin").height
 
         onShowTooltip: base.showTooltip(item, location, text)
         onHideTooltip: base.hideTooltip()
