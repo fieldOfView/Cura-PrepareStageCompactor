@@ -53,7 +53,7 @@ Item
 
             text: generateActiveQualityText()
             enabled: !header.currentExtruderVisible || header.currentExtruderIndex > -1
-            width: Math.round(parent.width * 0.55)
+            width: Math.round(parent.width * 0.55) - 2 * UM.Theme.getSize("default_lining").width
             height: UM.Theme.getSize("setting_control").height
             anchors.left: globalProfileLabel.right
             anchors.right: parent.right
@@ -173,7 +173,7 @@ Item
             left: parent.left
             leftMargin: Math.round(UM.Theme.getSize("sidebar_margin").width)
             right: settingVisibilityMenu.left
-            rightMargin: Math.round(UM.Theme.getSize("default_margin").width)
+            rightMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
         }
         height: visible ? UM.Theme.getSize("setting_control").height : 0
         Behavior on height { NumberAnimation { duration: 100 } }
