@@ -53,7 +53,7 @@ Item
 
             text: generateActiveQualityText()
             enabled: !header.currentExtruderVisible || header.currentExtruderIndex > -1
-            width: Math.round(parent.width * 0.55)
+            width: Math.round(parent.width * 0.55) - 2 * UM.Theme.getSize("default_lining").width
             height: UM.Theme.getSize("setting_control").height
             anchors.left: globalProfileLabel.right
             anchors.right: parent.right
@@ -173,7 +173,7 @@ Item
             left: parent.left
             leftMargin: Math.round(UM.Theme.getSize("sidebar_margin").width)
             right: settingVisibilityMenu.left
-            rightMargin: Math.round(UM.Theme.getSize("default_margin").width)
+            rightMargin: Math.round(UM.Theme.getSize("default_margin").width / 2)
         }
         height: visible ? UM.Theme.getSize("setting_control").height : 0
         Behavior on height { NumberAnimation { duration: 100 } }
@@ -341,30 +341,30 @@ Item
                 asynchronous: model.type != "enum" && model.type != "extruder" && model.type != "optional_extruder"
                 active: model.type != undefined
 
-                sourceComponent:
+                source:
                 {
                     switch(model.type)
                     {
                         case "int":
-                            return settingTextField
+                            return prepareStageCompactorSettingItemsPath + "SettingTextField.qml"
                         case "[int]":
-                            return settingTextField
+                            return prepareStageCompactorSettingItemsPath + "SettingTextField.qml"
                         case "float":
-                            return settingTextField
+                            return prepareStageCompactorSettingItemsPath + "SettingTextField.qml"
                         case "enum":
-                            return settingComboBox
+                            return prepareStageCompactorSettingItemsPath + "SettingComboBox.qml"
                         case "extruder":
-                            return settingExtruder
-                        case "optional_extruder":
-                            return settingOptionalExtruder
+                            return prepareStageCompactorSettingItemsPath + "SettingExtruder.qml"
                         case "bool":
-                            return settingCheckBox
+                            return prepareStageCompactorSettingItemsPath + "SettingCheckBox.qml"
                         case "str":
-                            return settingTextField
+                            return prepareStageCompactorSettingItemsPath + "SettingTextField.qml"
                         case "category":
-                            return settingCategory
+                            return prepareStageCompactorSettingItemsPath + "SettingCategory.qml"
+                        case "optional_extruder":
+                            return prepareStageCompactorSettingItemsPath + "SettingOptionalExtruder.qml"
                         default:
-                            return settingUnknown
+                            return prepareStageCompactorSettingItemsPath + "SettingUnknown.qml"
                     }
                 }
 
@@ -612,54 +612,5 @@ Item
                 storeIndex: 0
             }
         }
-    }
-
-    Component
-    {
-        id: settingTextField;
-
-        Cura.SettingTextField { }
-    }
-
-    Component
-    {
-        id: settingComboBox;
-
-        Cura.SettingComboBox { }
-    }
-
-    Component
-    {
-        id: settingExtruder;
-
-        Cura.SettingExtruder { }
-    }
-
-    Component
-    {
-        id: settingOptionalExtruder
-
-        Cura.SettingOptionalExtruder { }
-    }
-
-    Component
-    {
-        id: settingCheckBox;
-
-        Cura.SettingCheckBox { }
-    }
-
-    Component
-    {
-        id: settingCategory;
-
-        Cura.SettingCategory { }
-    }
-
-    Component
-    {
-        id: settingUnknown;
-
-        Cura.SettingUnknown { }
     }
 }

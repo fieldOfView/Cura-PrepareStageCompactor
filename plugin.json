@@ -1,8 +1,8 @@
 {
-    "name": "Compact Prepare Stage",
+    "name": "Compact Prepare sidebar",
     "author": "fieldOfView",
     "version": "master",
-    "description": "Provides a more compact Prepare sidebar in Cura.",
+    "description": "Provides a more compact Prepare sidebar in Cura for use on smaller screens",
     "api": 4,
     "i18n-catalog": "cura"
 }
