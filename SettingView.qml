@@ -178,6 +178,15 @@ Item
         height: visible ? UM.Theme.getSize("setting_control").height : 0
         Behavior on height { NumberAnimation { duration: 100 } }
 
+        Timer
+        {
+            id: settingsSearchTimer
+            onTriggered: filter.editingFinished()
+            interval: 100
+            running: false
+            repeat: false
+        }
+
         TextField
         {
             id: filter;
@@ -200,6 +209,11 @@ Item
             property bool lastFindingSettings: false
 
             onTextChanged:
+            {
+                settingsSearchTimer.restart()
+            }
+
+            onEditingFinished:
             {
                 definitionsModel.filter = {"i18n_label": "*" + text};
                 findingSettings = (text.length > 0);
