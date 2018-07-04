@@ -17,7 +17,11 @@ class PrepareStageCompactor(Extension):
 
     def _engineCreated(self):
         setting_items_path = QUrl.fromLocalFile( os.path.abspath((os.path.join(Resources.getPath(Application.getInstance().ResourceTypes.QmlFiles), "Settings"))) + "/")
-        Application.getInstance()._engine.rootContext().setContextProperty("prepareStageCompactorSettingItemsPath", setting_items_path)
+        try:
+            engine = Application.getInstance()._qml_engine
+        except AttributeError:
+            engine = Application.getInstance()._engine
+        engine.rootContext().setContextProperty("prepareStageCompactorSettingItemsPath", setting_items_path)
 
         sidebar_component_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sidebar.qml")
         prepare_stage = Application.getInstance().getController().getStage("PrepareStage")
