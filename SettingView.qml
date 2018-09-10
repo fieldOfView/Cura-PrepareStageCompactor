@@ -423,7 +423,7 @@ Item
                 UM.SettingPropertyProvider
                 {
                     id: inheritStackProvider
-                    containerStackId: Cura.MachineManager.activeMachineId
+                    containerStack: Cura.MachineManager.activeMachine
                     key: model.key
                     watchedProperties: [ "limit_to_extruder" ]
                 }
@@ -432,7 +432,7 @@ Item
                 {
                     id: provider
 
-                    containerStackId: Cura.MachineManager.activeMachineId
+                    containerStack: Cura.MachineManager.activeMachine
                     key: model.key ? model.key : ""
                     watchedProperties: [ "value", "enabled", "state", "validationState", "settable_per_extruder", "resolve" ]
                     storeIndex: 0
@@ -620,7 +620,7 @@ Item
             {
                 id: machineExtruderCount
 
-                containerStackId: Cura.MachineManager.activeMachineId
+                containerStack: Cura.MachineManager.activeMachine
                 key: "machine_extruder_count"
                 watchedProperties: [ "value" ]
                 storeIndex: 0
