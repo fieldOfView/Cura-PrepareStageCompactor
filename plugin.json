@@ -1,7 +1,7 @@
 {
     "name": "Compact Prepare sidebar",
     "author": "fieldOfView",
-    "version": "3.5",
+    "version": "master",
     "minimum_cura_version": "3.5",
     "maximum_cura_version": "3.5",
     "description": "Provides a more compact Prepare sidebar in Cura for use on smaller screens",
