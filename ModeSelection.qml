@@ -13,8 +13,8 @@ Rectangle
     property var model
     property var currentIndex:
     {
-        var index = Math.round(UM.Preferences.getValue("cura/active_mode"))
-        if(index)
+        var index = Math.round(UM.Preferences.getValue("cura/active_mode"));
+        if(index != null && !isNaN(index))
         {
             return index;
         }

@@ -446,9 +446,13 @@ Rectangle
         sidebarContents.replace(modesListModel.get(base.currentModeIndex).item, { "immediate": true })
 
         var index = Math.round(UM.Preferences.getValue("cura/active_mode"))
-        if(index)
+        if(index != null && !isNaN(index))
         {
             currentModeIndex = index;
+        }
+        else
+        {
+            currentModeIndex = 0;
         }
     }
 
